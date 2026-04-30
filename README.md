@@ -1,18 +1,18 @@
-# 🚀 Gerenciador de Tarefas Pro - ADS
+# Gerenciador de Tarefas
 
 Este é um ecossistema completo de produtividade desenvolvido para o curso de **Análise e Desenvolvimento de Sistemas**. O projeto evoluiu de uma lista simples para uma aplicação robusta com backend em Python, banco de dados persistente e uma interface focada na experiência do usuário (UX).
 
-## 🌟 Novas Funcionalidades
+## Novas Funcionalidades
 
-- **🌓 Dual Theme:** Modo claro e escuro persistente (salva sua preferência no navegador).
-- **⏱️ Modo Foco Integrado:** Cronômetro dinâmico por tarefa para aplicar a técnica Pomodoro.
-- **🔊 Controle de Alerta:** Notificação sonora ao finalizar ciclos de foco com ajuste de volume.
-- **📊 Barra de Progresso:** Visualização em tempo real da conclusão das suas metas.
-- **📱 Design Responsivo:** Interface totalmente adaptada para uso em smartphones.
-- **🔐 Segurança Avançada:** Senhas protegidas por criptografia de nível industrial (BCrypt).
-- **🚀 Efeitos Visuais:** Animações interativas para celebrar a conclusão de tarefas.
+- **Dual Theme:** Modo claro e escuro persistente (salva sua preferência no navegador).
+- **Modo Foco Integrado:** Cronômetro dinâmico por tarefa para aplicar a técnica Pomodoro.
+- **Controle de Alerta:** Notificação sonora ao finalizar ciclos de foco com ajuste de volume.
+- **Barra de Progresso:** Visualização em tempo real da conclusão das suas metas.
+- **Design Responsivo:** Interface totalmente adaptada para uso em smartphones.
+- **Segurança Avançada:** Senhas protegidas por criptografia de nível industrial (BCrypt).
+- **Efeitos Visuais:** Animações interativas para celebrar a conclusão de tarefas.
 
-## 🛠️ Tecnologias e Arquitetura
+## Tecnologias e Arquitetura
 
 O projeto segue o padrão de **Separação de Preocupações**, com pastas organizadas para melhor manutenção:
 
@@ -25,7 +25,7 @@ O projeto segue o padrão de **Separação de Preocupações**, com pastas organ
   - `js/script.js`: Lógica dinâmica e integração com API.
 - **Assets:** Sons de alerta e ícones personalizados.
 
-## 📦 Como rodar o projeto no seu notebook
+## Como rodar o projeto no seu notebook
 
 1. **Ative o ambiente virtual:**
    ```bash
