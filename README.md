@@ -21,8 +21,8 @@ O projeto segue o padrão de **Separação de Preocupações**, com pastas organ
 - **Criptografia:** Bcrypt.
 - **Frontend:**
   - `index.html`: Estrutura semântica.
-  - `css/style.css`: Estilização moderna com Variáveis CSS.
-  - `js/script.js`: Lógica dinâmica e integração com API.
+  - `style.css`: Estilização moderna com Variáveis CSS.
+  - `script.js`: Lógica dinâmica e integração com API.
 - **Assets:** Sons de alerta e ícones personalizados.
 
 ## Como rodar o projeto no seu notebook
