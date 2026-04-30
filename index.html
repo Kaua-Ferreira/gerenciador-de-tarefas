@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciador de Estudos</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #0f0f0f;
+      color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 450px;
+    }
+
+    h1 {
+      color: #007acc;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background: #2d2d2d;
+      color: white;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      cursor: pointer;
+      background: #007acc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .btn-limpar {
+      background: #d9534f;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: #2d2d2d;
+      margin-bottom: 10px;
+      padding: 12px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 5px solid #007acc;
+    }
+
+    .concluida {
+      border-left-color: #5cb85c;
+      opacity: 0.6;
+      text-decoration: line-through;
+    }
+
+    .info {
+      flex-grow: 1;
+      cursor: pointer;
+    }
+
+    .data {
+      font-size: 0.7rem;
+      color: #888;
+      display: block;
+    }
+
+    .btn-excluir {
+      color: #ff4d4d;
+      font-weight: bold;
+      cursor: pointer;
+      padding-left: 15px;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Gerenciador de Estudos</h1>
+    <input type="text" id="taskInput" placeholder="Nova tarefa...">
+    <button onclick="salvar()">Adicionar</button>
+    <button onclick="limparTudo()" class="btn-limpar">Limpar Tudo</button>
+    <ul id="lista"></ul>
+  </div>
+
+  <script>
+    // Mude para o seu IP real para acessar do celular (ver passo abaixo)
+    const API_URL = `http://${window.location.hostname}:8000/tarefas`;
+
+    async function carregar() {
+      const res = await fetch(API_URL);
+      const dados = await res.json();
+      document.getElementById('lista').innerHTML = dados.map(t => `
+                <li class="${t.concluida ? 'concluida' : ''}">
+                    <div class="info" onclick="alternar(${t.id})">
+                        <strong>${t.nome}</strong>
+                        <span class="data">${t.data}</span>
+                    </div>
+                    <span class="btn-excluir" onclick="excluir(${t.id})">×</span>
+                </li>
+            `).join('');
+    }
+
+    async function salvar() {
+      const nome = document.getElementById('taskInput').value;
+      if (!nome) return;
+      await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nome }) });
+      document.getElementById('taskInput').value = '';
+      carregar();
+    }
+
+    async function alternar(id) {
+      await fetch(`${API_URL}/${id}`, { method: 'PUT' });
+      carregar();
+    }
+
+    async function excluir(id) {
+      if (confirm("Excluir esta tarefa?")) {
+        await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        carregar();
+      }
+    }
+
+    async function limparTudo() {
+      if (confirm("Limpar tudo?")) {
+        await fetch("http://" + window.location.hostname + ":8000/limpar", { method: 'DELETE' });
+        carregar();
+      }
+    }
+    carregar();
+  </script>
+</body>
+
+</html>
