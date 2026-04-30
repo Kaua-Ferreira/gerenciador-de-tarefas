@@ -7,6 +7,13 @@
   <title>Gerenciador de Tarefas</title>
   <link rel="icon" type="image/png" href="estudando.png">
   <link rel="stylesheet" href="style.css">
+  <script>
+        // Isso executa ANTES da página aparecer, evitando o flash escuro
+        const temaSalvo = localStorage.getItem('tema');
+        if (temaSalvo === 'claro') {
+            document.documentElement.classList.add('light-mode');
+        }
+    </script>
 </head>
 
 <body>
@@ -55,16 +62,19 @@
         <input type="text" id="taskInput" placeholder="O que vamos estudar?">
         
         <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-            <select id="taskCategory" style="flex: 2; margin-bottom: 0;">
-                <option value="Estudo">📚 Estudo</option>
-                <option value="Urgente">🚨 Urgente</option>
-                <option value="Lazer">🎮 Lazer</option>
-            </select>
-            <div style="flex: 1; display: flex; align-items: center; background: #2d2d2d; border-radius: 6px; padding-right: 10px; border: 1px solid #333;">
-                <input type="number" id="focoEstimado" value="25" min="1" max="120" style="border: none; margin-bottom: 0; background: transparent;">
-                <span style="font-size: 0.7rem; color: #888;">min</span>
-            </div>
-        </div>
+    <select id="taskCategory" style="flex: 2; margin-bottom: 0;">
+        <option value="Estudo">📚 Estudo</option>
+        <option value="Urgente">🚨 Urgente</option>
+        <option value="Lazer">🎮 Lazer</option>
+    </select>
+    
+    <!-- Removi o #2d2d2d fixo e coloquei as variáveis CSS -->
+    <div style="flex: 1; display: flex; align-items: center; background: var(--input-bg); border-radius: 10px; padding-right: 10px; border: 1px solid var(--border);">
+        <input type="number" id="focoEstimado" value="25" min="1" max="120" style="border: none; margin-bottom: 0; background: transparent; color: var(--text);">
+        <span style="font-size: 0.7rem; color: var(--text);">min</span>
+    </div>
+</div>
+
 
         <button type="button" onclick="salvar()">Adicionar Tarefa</button>
         

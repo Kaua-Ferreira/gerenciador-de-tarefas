@@ -26,8 +26,33 @@ function mostrarLogin() {
 }
 
 function alternarTema() {
-    document.body.classList.toggle('light-mode');
+    const corpo = document.body;
+    corpo.classList.toggle('light-mode');
+
+    // Salva a escolha na memória do navegador
+    if (corpo.classList.contains('light-mode')) {
+        localStorage.setItem('tema', 'claro');
+    } else {
+        localStorage.setItem('tema', 'escuro');
+    }
 }
+
+window.onload = () => {
+    // --- Trava de Tema ---
+    const temaSalvo = localStorage.getItem('tema');
+    if (temaSalvo === 'claro') {
+        document.body.classList.add('light-mode');
+    }
+
+    // --- Trava de Login (seu código que já existe) ---
+    const usuarioLogado = localStorage.getItem('usuario');
+    if (usuarioLogado) {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('app-content').style.display = 'block';
+        document.getElementById('tituloApp').innerText = `Estudos de ${usuarioLogado}`;
+        carregar();
+    }
+};
 
 // --- 3. LOGIN E CADASTRO ---
 async function realizarCadastro() {

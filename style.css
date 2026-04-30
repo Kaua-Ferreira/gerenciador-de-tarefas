@@ -9,7 +9,7 @@
 }
 
 /* Cores para o Modo Claro */
-body.light-mode {
+.light-mode {
     --bg: #f0f0f0;
     --container: #ffffff;
     --text: #333333;
@@ -62,6 +62,21 @@ button {
     margin-bottom: 10px;
 }
 
+/* Isso garante que todos os tipos de input, inclusive o de número, mudem de cor */
+input[type="text"], 
+input[type="password"], 
+input[type="number"], 
+select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background-color: var(--input-bg) !important; /* O !important força a mudança */
+    color: var(--text) !important;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
 .btn-limpar { background: #d9534f; }
 .btn-secundario { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
 
@@ -95,14 +110,20 @@ button {
 ul { list-style: none; padding: 0; }
 
 li {
-    background: var(--input-bg);
+    /* Use as variáveis que mudam sozinhas */
+    background-color: var(--input-bg) !important;
+    color: var(--text) !important;
+    
     margin-bottom: 10px;
     padding: 12px;
-    border-radius: 6px;
+    border-radius: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-left: 5px solid var(--primary);
+    
+    /* Essa linha abaixo evita a piscada brusca */
+    transition: background-color 0.3s ease, color 0.3s ease; 
 }
 
 .concluida { border-left-color: #5cb85c; opacity: 0.6; text-decoration: line-through; }
@@ -126,3 +147,59 @@ li {
 .cat-urgente { background: #d9534f; }
 .cat-estudo { background: var(--primary); }
 .cat-lazer { background: #5cb85c; }
+
+/* --- RESPONSIVIDADE (MODO CELULAR) --- */
+@media (max-width: 600px) {
+    body {
+        padding: 10px; /* Menos espaço nas bordas */
+    }
+
+    .container {
+        width: 100%; /* Ocupa a largura total */
+        max-width: 100%;
+        padding: 15px;
+        border-radius: 8px; /* Bordas mais sutis no celular */
+    }
+
+    h1 {
+        font-size: 1.5rem; /* Título um pouco menor */
+    }
+
+    /* Deixa os botões e inputs maiores para facilitar o toque com o dedo */
+    input, select, button {
+        padding: 15px; 
+        font-size: 1rem;
+    }
+
+    /* Ajuste na lista para não apertar os ícones */
+    li {
+        flex-direction: column; /* Empilha as informações se ficar apertado */
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .info {
+        width: 100%;
+    }
+
+    /* Coloca os botões de ação (⏱️, ✏️, ×) em uma linha separada embaixo */
+    li div[style*="display:flex"] {
+        width: 100%;
+        justify-content: space-around;
+        border-top: 1px solid var(--border);
+        padding-top: 10px;
+    }
+
+    /* Ajuste do Timer para o celular */
+    #timer {
+        font-size: 2.5rem;
+    }
+
+    /* Botão de tema fica um pouco menor para não atrapalhar */
+    .btn-tema {
+        width: 40px;
+        height: 40px;
+        top: 5px;
+        right: 5px;
+    }
+}
