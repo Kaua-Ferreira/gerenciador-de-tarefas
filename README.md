@@ -1,4 +1,4 @@
-# 📚 Gerenciador de Tarefas
+# Gerenciador de Tarefas
 
 Este é um sistema de gerenciamento de tarefas de estudo desenvolvido como projeto prático para o curso de **Análise e Desenvolvimento de Sistemas**. O sistema permite organizar matérias por categorias, monitorar o progresso das atividades e garante a segurança dos dados com autenticação de usuários.
 
