@@ -6,333 +6,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gerenciador de Tarefas</title>
   <link rel="icon" type="image/png" href="estudando.png">
-  <style>
-    body {
-      font-family: sans-serif;
-      background-color: #0f0f0f;
-      color: #e0e0e0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .container {
-      background-color: #1e1e1e;
-      padding: 20px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 450px;
-    }
-
-    h1 {
-      color: #007acc;
-      text-align: center;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 6px;
-      border: 1px solid #333;
-      background: #2d2d2d;
-      color: white;
-      box-sizing: border-box;
-      margin-bottom: 10px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      cursor: pointer;
-      background: #007acc;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .btn-limpar {
-      background: #d9534f;
-    }
-
-    .btn-secundario {
-      background: transparent;
-      border: 1px solid #007acc;
-      color: #007acc;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    li {
-      background: #2d2d2d;
-      margin-bottom: 10px;
-      padding: 12px;
-      border-radius: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-left: 5px solid #007acc;
-    }
-
-    .concluida {
-      border-left-color: #5cb85c;
-      opacity: 0.6;
-      text-decoration: line-through;
-    }
-
-    .info {
-      flex-grow: 1;
-      cursor: pointer;
-    }
-
-    .data {
-      font-size: 0.7rem;
-      color: #888;
-      display: block;
-    }
-
-    .btn-excluir {
-      color: #ff4d4d;
-      font-weight: bold;
-      cursor: pointer;
-      padding-left: 15px;
-      font-size: 1.2rem;
-    }
-
-    /* Controle de Telas */
-    #app-content {
-      display: none;
-    }
-
-    #login-screen,
-    #cadastro-screen {
-      display: block;
-    }
-
-    /* Barra de Progresso */
-  .progress-container { background: #333; border-radius: 10px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
-  #progress-bar { background: #5cb85c; height: 100%; width: 0%; transition: 0.5s; }
-
-  /* Cores das Categorias */
-  .badge { font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; margin-top: 5px; display: inline-block; text-transform: uppercase; }
-  .cat-urgente { background: #d9534f; }
-  .cat-estudo { background: #007acc; }
-  .cat-lazer { background: #5cb85c; }
-
-  select { width: 100%; padding: 10px; border-radius: 6px; background: #2d2d2d; color: white; border: 1px solid #333; margin-bottom: 10px; }
-
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <button type="button" onclick="alternarTema()" class="btn-secundario btn-tema">🌓</button>
 
-  <!-- TELA DE LOGIN -->
-  <div id="login-screen" class="container">
-    <h1>Login ADS</h1>
-    <input type="text" id="userLogin" placeholder="Usuário">
-    <input type="password" id="passLogin" placeholder="Senha">
-    <button type="button" onclick="realizarLogin()">Entrar</button>
-    <button onclick="mostrarCadastro()" class="btn-secundario">Criar Conta</button>
-  </div>
+    <!-- TELA DE LOGIN -->
+    <div id="login-screen" class="container">
+        <h1>Login ADS</h1>
+        <input type="text" id="userLogin" placeholder="Usuário">
+        <input type="password" id="passLogin" placeholder="Senha">
+        <button type="button" onclick="realizarLogin()">Entrar</button>
+        <button onclick="mostrarCadastro()" class="btn-secundario">Criar Conta</button>
+    </div>
 
-  <!-- TELA DE CADASTRO -->
-  <div id="cadastro-screen" class="container" style="display: none;">
-    <h1>Cadastrar</h1>
-    <input type="text" id="userCad" placeholder="Novo Usuário">
-    <input type="password" id="passCad" placeholder="Nova Senha">
-    <button type="button" onclick="realizarCadastro()">Salvar Cadastro</button>
-    <button onclick="mostrarLogin()" class="btn-secundario">Voltar</button>
-  </div>
+    <!-- TELA DE CADASTRO -->
+    <div id="cadastro-screen" class="container" style="display: none;">
+        <h1>Cadastrar</h1>
+        <input type="text" id="userCad" placeholder="Novo Usuário">
+        <input type="password" id="passCad" placeholder="Nova Senha">
+        <button type="button" onclick="realizarCadastro()">Salvar Cadastro</button>
+        <button onclick="mostrarLogin()" class="btn-secundario">Voltar</button>
+    </div>
 
-  <!-- TELA PRINCIPAL (APP) -->
-  <div id="app-content" class="container">
-    <h1 id="tituloApp">Gerenciador de Estudos</h1>
-    
-    <!-- Barra de Progresso no topo -->
-    <div class="progress-container"><div id="progress-bar"></div></div>
+    <!-- TELA PRINCIPAL (APP) -->
+    <div id="app-content" class="container">
+        <h1 id="tituloApp">Gerenciador de Tarefas</h1>
 
-    <!-- Campos de Cadastro Agrupados -->
-    <input type="text" id="taskInput" placeholder="O que vamos estudar?">
-    
-    <select id="taskCategory">
-        <option value="Estudo">📚 Estudo</option>
-        <option value="Urgente">🚨 Urgente</option>
-        <option value="Lazer">🎮 Lazer</option>
-    </select>
-
-    <button type="button" onclick="salvar()">Adicionar Tarefa</button>
-    
-    <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
-
-    <ul id="lista"></ul>
-
-    <button type="button" onclick="limparTudo()" class="btn-limpar">Limpar Tudo</button>
-    <button type="button" onclick="sair()" class="btn-secundario">Sair</button>
-</div>
-
-
-  <script>
-    const BASE_URL = `http://${window.location.hostname}:8000`;
-
-    // 1. Persistência de Login: Verifica se já estava logado ao abrir o site
-    window.onload = () => {
-        const usuarioLogado = localStorage.getItem('usuario');
-        if (usuarioLogado) {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-content').style.display = 'block';
-            document.getElementById('tituloApp').innerText = `Estudos de ${usuarioLogado}`;
-            carregar();
-        }
-    };
-
-    function mostrarCadastro() { 
-        document.getElementById('login-screen').style.display = 'none'; 
-        document.getElementById('cadastro-screen').style.display = 'block'; 
-    }
-
-    function mostrarLogin() { 
-        document.getElementById('cadastro-screen').style.display = 'none'; 
-        document.getElementById('login-screen').style.display = 'block'; 
-    }
-
-    async function realizarCadastro() {
-        const user = document.getElementById('userCad').value;
-        const pass = document.getElementById('passCad').value;
-        try {
-            const res = await fetch(`${BASE_URL}/cadastro`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ "username": user, "password": pass })
-            });
-            if (res.ok) { alert("Cadastrado com sucesso!"); mostrarLogin(); }
-            else { const erro = await res.json(); alert("Erro: " + erro.detail); }
-        } catch (e) { console.log("Erro na rede:", e); }
-    }
-
-    async function realizarLogin() {
-        const username = document.getElementById('userLogin').value;
-        const password = document.getElementById('passLogin').value;
-        const res = await fetch(`${BASE_URL}/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-        if (res.ok) {
-            localStorage.setItem('usuario', username); // Salva o login
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-content').style.display = 'block';
-            document.getElementById('tituloApp').innerText = `Estudos de ${username}`;
-            carregar();
-        } else { alert("Usuário ou senha incorretos!"); }
-    }
-
-    async function carregar() {
-        try {
-            const res = await fetch(`${BASE_URL}/tarefas`);
-            const dados = await res.json();
-            document.getElementById('lista').innerHTML = dados.map(t => `
-                <li class="${t.concluida ? 'concluida' : ''}">
-                    <div class="info" onclick="alternar(${t.id})">
-                        <strong>${t.nome}</strong>
-                        <span class="data">${t.data}</span>
-                    </div>
-                    <span class="btn-excluir" onclick="excluir(${t.id})">×</span>
-                </li>
-            `).join('');
-        } catch (e) { console.error("Erro ao carregar:", e); }
-    }
-
-    async function salvar() {
-        const input = document.getElementById('taskInput');
-        const categoriaSelect = document.getElementById('taskCategory');
-        const nome = input.value;
-        const categoria = categoriaSelect.value;
-
-        if (!nome) return;
-
-         try {
-        await fetch(`${BASE_URL}/tarefas`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nome, categoria }) // Envia os dois para o Python
-        });
-        
-        input.value = '';
-        await carregar(); 
-        } catch (error) {
-          console.error("Erro ao salvar:", error);
-        }
-    }
-
-    async function alternar(id) {
-        await fetch(`${BASE_URL}/tarefas/${id}`, { method: 'PUT' });
-        carregar();
-    }
-
-    async function excluir(id) {
-        if (confirm("Excluir esta tarefa?")) {
-            await fetch(`${BASE_URL}/tarefas/${id}`, { method: 'DELETE' });
-            carregar();
-        }
-    }
-
-    async function limparTudo() {
-        if (confirm("Limpar tudo?")) {
-            await fetch(`${BASE_URL}/limpar`, { method: 'DELETE' });
-            carregar();
-        }
-    }
-
-    function sair() {
-        localStorage.removeItem('usuario'); // Limpa a memória
-        location.reload();
-    }
-
-    // Atualize a função carregar para calcular o progresso
-async function carregar() {
-    const res = await fetch(`${BASE_URL}/tarefas`);
-    const dados = await res.json();
-    
-    // Cálculo da Barra de Progresso
-    const concluidas = dados.filter(t => t.concluida).length;
-    const total = dados.length;
-    const porcentagem = total > 0 ? (concluidas / total) * 100 : 0;
-    document.getElementById('progress-bar').style.width = porcentagem + "%";
-
-    document.getElementById('lista').innerHTML = dados.map(t => `
-        <li class="${t.concluida ? 'concluida' : ''}">
-            <div class="info" onclick="alternar(${t.id})">
-                <strong>${t.nome}</strong>
-                <span class="badge cat-${t.categoria.toLowerCase()}">${t.categoria}</span>
-                <span class="data">${t.data}</span>
+        <!-- JANELA DE FOCO (Inicia escondida, aparece ao clicar na tarefa) -->
+        <div id="painel-foco" style="display: none; background: #1a1a1a; border: 2px solid #ff4d4d; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
+            <h3 id="tarefa-ativa-nome" style="color: #ff4d4d; margin: 0;">🚀 Focando...</h3>
+            <div id="timer" style="font-size: 3rem; font-weight: bold; color: #ff4d4d; margin: 10px 0;">00:00</div>
+            <!-- Dentro da div painel-foco -->
+            <div style="margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <span>🔈</span>
+                <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5" style="width: 100px; margin: 0;">
+                <span>🔊</span>
             </div>
-            <span class="btn-excluir" onclick="excluir(${t.id})">×</span>
-        </li>
-    `).join('');
-}
 
-// Atualize a função salvar para enviar a categoria
-async function salvar() {
-    const nome = document.getElementById('taskInput').value;
-    const categoria = document.getElementById('taskCategory').value;
-    if (!nome) return;
-    await fetch(`${BASE_URL}/tarefas`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome, categoria })
-    });
-    document.getElementById('taskInput').value = '';
-    carregar();
-}
+            <button type="button" onclick="pararFoco()" class="btn-limpar" style="width: auto; padding: 5px 20px;">Parar e Fechar</button>
+        </div>
 
-</script>
+        <!-- Barra de Progresso -->
+        <div class="progress-container"><div id="progress-bar"></div></div>
 
+        <!-- Cadastro de Nova Tarefa -->
+        <input type="text" id="taskInput" placeholder="O que vamos estudar?">
+        
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <select id="taskCategory" style="flex: 2; margin-bottom: 0;">
+                <option value="Estudo">📚 Estudo</option>
+                <option value="Urgente">🚨 Urgente</option>
+                <option value="Lazer">🎮 Lazer</option>
+            </select>
+            <div style="flex: 1; display: flex; align-items: center; background: #2d2d2d; border-radius: 6px; padding-right: 10px; border: 1px solid #333;">
+                <input type="number" id="focoEstimado" value="25" min="1" max="120" style="border: none; margin-bottom: 0; background: transparent;">
+                <span style="font-size: 0.7rem; color: #888;">min</span>
+            </div>
+        </div>
+
+        <button type="button" onclick="salvar()">Adicionar Tarefa</button>
+        
+        <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
+
+        <ul id="lista"></ul>
+
+        <button type="button" onclick="limparTudo()" class="btn-limpar">Limpar Tudo</button>
+        <button type="button" onclick="sair()" class="btn-secundario">Sair</button>
+    </div>
+
+    <script src="script.js"></script>
 </body>
+
 <footer style="margin-top: 20px; font-size: 0.6rem; color: #555;">
   <a href="https://www.flaticon.com/br/icones-gratis/estude" title="estude ícones"
     style="color: #555; text-decoration: none;">

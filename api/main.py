@@ -7,7 +7,7 @@ from datetime import datetime
 
 app = FastAPI()
 
-# Configuração de Segurança (CORS) - O "Porteiro" do Sistema
+# Configuração de Segurança (CORS)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,39 +21,16 @@ def conectar_banco():
     diretorio_atual = os.path.dirname(os.path.abspath(__file__))
     conn = sqlite3.connect(os.path.join(diretorio_atual, "estudos.db"))
     cursor = conn.cursor()
-    # Adicionada a coluna 'categoria'
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS tarefas (
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
-            nome TEXT, categoria TEXT, concluida INTEGER DEFAULT 0, data_criacao TEXT
+            nome TEXT, 
+            categoria TEXT, 
+            tempo_foco INTEGER DEFAULT 25, 
+            concluida INTEGER DEFAULT 0, 
+            data_criacao TEXT
         )
     """)
-    cursor.execute("CREATE TABLE IF NOT EXISTS usuarios (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT)")
-    conn.commit()
-    return conn
-
-@app.get("/tarefas")
-def listar():
-    conn = conectar_banco()
-    cursor = conn.cursor()
-    cursor.execute("SELECT id, nome, concluida, data_criacao, categoria FROM tarefas ORDER BY id DESC")
-    dados = cursor.fetchall()
-    conn.close()
-    return [{"id": t[0], "nome": t[1], "concluida": bool(t[2]), "data": t[3], "categoria": t[4]} for t in dados]
-
-@app.post("/tarefas")
-def adicionar(item: dict):
-    data_atual = datetime.now().strftime("%d/%m %H:%M")
-    conn = conectar_banco()
-    cursor = conn.cursor()
-    # Agora salvamos também a categoria enviada pelo frontend
-    cursor.execute("INSERT INTO tarefas (nome, data_criacao, categoria) VALUES (?, ?, ?)", 
-                   (item["nome"], data_atual, item.get("categoria", "Estudo")))
-    conn.commit()
-    conn.close()
-    return {"status": "Adicionado!"}
-
-    # Tabela de Usuários
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS usuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -64,10 +41,9 @@ def adicionar(item: dict):
     conn.commit()
     return conn
 
-# --- FUNÇÕES DE SEGURANÇA (BCRYPT DIRETO) ---
+# --- FUNÇÕES DE SEGURANÇA ---
 def gerar_senha_hash(password: str):
     pwd_bytes = password.encode('utf-8')
-    # Resolve o limite de 72 bytes do bcrypt
     if len(pwd_bytes) > 72: pwd_bytes = pwd_bytes[:72]
     salt = bcrypt.gensalt()
     return bcrypt.hashpw(pwd_bytes, salt).decode('utf-8')
@@ -82,12 +58,9 @@ def verificar_senha(password: str, hashed_password: str):
 def cadastro(dados: dict):
     username = dados.get("username")
     password = dados.get("password")
-    
     if not username or not password:
         raise HTTPException(status_code=400, detail="Dados incompletos")
-    
     senha_hash = gerar_senha_hash(password)
-    
     try:
         conn = conectar_banco()
         cursor = conn.cursor()
@@ -105,28 +78,31 @@ def login(dados: dict):
     cursor.execute("SELECT password FROM usuarios WHERE username = ?", (dados["username"],))
     user = cursor.fetchone()
     conn.close()
-
     if user and verificar_senha(dados["password"], user[0]):
         return {"status": "sucesso", "username": dados["username"]}
-    else:
-        raise HTTPException(status_code=401, detail="Usuário ou senha incorretos")
+    raise HTTPException(status_code=401, detail="Usuário ou senha incorretos")
 
-# --- ROTAS DE TAREFAS ---
+# --- ROTAS DE TAREFAS (CORRIGIDAS E ÚNICAS) ---
+
 @app.get("/tarefas")
 def listar():
     conn = conectar_banco()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, nome, concluida, data_criacao FROM tarefas ORDER BY id DESC")
+    cursor.execute("SELECT id, nome, concluida, data_criacao, categoria, tempo_foco FROM tarefas ORDER BY id DESC")
     dados = cursor.fetchall()
     conn.close()
-    return [{"id": t[0], "nome": t[1], "concluida": bool(t[2]), "data": t[3]} for t in dados]
+    return [{"id": t[0], "nome": t[1], "concluida": bool(t[2]), "data": t[3], "categoria": t[4], "tempo": t[5]} for t in dados]
 
 @app.post("/tarefas")
 def adicionar(item: dict):
     data_atual = datetime.now().strftime("%d/%m %H:%M")
     conn = conectar_banco()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO tarefas (nome, data_criacao) VALUES (?, ?)", (item["nome"], data_atual))
+    # Enviando os 4 valores para os 4 espaços (?)
+    cursor.execute("""
+        INSERT INTO tarefas (nome, data_criacao, categoria, tempo_foco) 
+        VALUES (?, ?, ?, ?)
+    """, (item["nome"], data_atual, item.get("categoria", "Estudo"), item.get("tempo_foco", 25)))
     conn.commit()
     conn.close()
     return {"status": "Adicionado!"}
@@ -139,6 +115,15 @@ def alternar_status(id_tarefa: int):
     conn.commit()
     conn.close()
     return {"status": "Status atualizado!"}
+
+@app.put("/tarefas/editar/{id_tarefa}")
+def editar_tarefa(id_tarefa: int, item: dict):
+    conn = conectar_banco()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE tarefas SET nome = ? WHERE id = ?", (item["nome"], id_tarefa))
+    conn.commit()
+    conn.close()
+    return {"status": "Editado!"}
 
 @app.delete("/tarefas/{id_tarefa}")
 def excluir(id_tarefa: int):
@@ -158,7 +143,7 @@ def limpar():
     conn.close()
     return {"status": "Banco limpo!"}
 
-# Inicialização do Banco ao ligar o servidor
+# Inicialização automática
 conectar_banco()
 
 if __name__ == "__main__":

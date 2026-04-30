@@ -1,0 +1,128 @@
+/* Variáveis de Cores (Nível Profissional) */
+:root {
+    --bg: #0f0f0f;
+    --container: #1e1e1e;
+    --text: #e0e0e0;
+    --primary: #007acc;
+    --border: #333;
+    --input-bg: #2d2d2d;
+}
+
+/* Cores para o Modo Claro */
+body.light-mode {
+    --bg: #f0f0f0;
+    --container: #ffffff;
+    --text: #333333;
+    --border: #ccc;
+    --input-bg: #f9f9f9;
+}
+
+body {
+    font-family: sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    transition: 0.3s; /* Suaviza a troca de tema */
+}
+
+.container {
+    background-color: var(--container);
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+h1 { color: var(--primary); text-align: center; }
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--input-bg);
+    color: var(--text);
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    cursor: pointer;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.btn-limpar { background: #d9534f; }
+.btn-secundario { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+
+/* Pomodoro Estilizado */
+#pomodoro {
+    text-align: center;
+    margin-bottom: 20px;
+    border: 2px solid var(--primary);
+    padding: 15px;
+    border-radius: 10px;
+}
+#timer {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ff4d4d;
+    margin: 10px 0;
+}
+.btn-foco { background: #ff4d4d; }
+
+/* Barra de Tema fixa no canto */
+.btn-tema {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    padding: 0;
+}
+
+ul { list-style: none; padding: 0; }
+
+li {
+    background: var(--input-bg);
+    margin-bottom: 10px;
+    padding: 12px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 5px solid var(--primary);
+}
+
+.concluida { border-left-color: #5cb85c; opacity: 0.6; text-decoration: line-through; }
+
+.info { flex-grow: 1; cursor: pointer; }
+
+.data { font-size: 0.7rem; color: #888; display: block; }
+
+.btn-excluir { color: #ff4d4d; font-weight: bold; cursor: pointer; padding-left: 15px; font-size: 1.2rem; }
+
+/* Controle de Telas */
+#app-content { display: none; }
+#login-screen, #cadastro-screen { display: block; }
+
+/* Barra de Progresso */
+.progress-container { background: var(--border); border-radius: 10px; height: 10px; width: 100%; margin: 15px 0; overflow: hidden; }
+#progress-bar { background: #5cb85c; height: 100%; width: 0%; transition: 0.5s; }
+
+/* Badges de Categorias */
+.badge { font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; margin-top: 5px; display: inline-block; text-transform: uppercase; color: white; font-weight: bold;}
+.cat-urgente { background: #d9534f; }
+.cat-estudo { background: var(--primary); }
+.cat-lazer { background: #5cb85c; }
